@@ -11,6 +11,7 @@ from rich.traceback import install
 from rich.pretty import pprint
 from rich import print as rprint
 from rich.syntax import Syntax
+from rich.markup import escape
 
 # Install rich traceback handler
 install(show_locals=True)
@@ -55,7 +56,8 @@ def _log(
         filename = frame.f_code.co_filename.split("\\")[-1]
         lineno = frame.f_lineno
         function = frame.f_code.co_name
-        caller_info = f"[dim][{filename}:{lineno} in {function}()][/dim] "
+        caller_details = escape(f"{filename}:{lineno} in {function}()")
+        caller_info = f"[dim]{caller_details}[/dim] "
     
     # Format the category and level
     category_str = f"[{COLORS.get(category, 'white')}]{category}[/{COLORS.get(category, 'white')}]" if category else ""
