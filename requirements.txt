@@ -1,0 +1,6 @@
+chainlit
+langchain
+langchain-openai
+langgraph
+sqlalchemy
+aiosqlite
