@@ -1,8 +1,17 @@
 {
-    "custom_fonts": [],
+    "custom_fonts": [
+        {
+            "family": "IRANSans",
+            "url": "https://cdn.jsdelivr.net/gh/rastikerdar/iran-sans/dist/iran-sans.css"
+        },
+        {
+            "family": "Vazirmatn",
+            "url": "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"
+        }
+    ],
     "variables": {
         "light": {
-            "--font-sans": "'Inter', sans-serif",
+            "--font-sans": "'Vazirmatn', 'IRANSans', 'Inter', sans-serif",
             "--font-mono": "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
             "--background": "0 0% 100%",
             "--foreground": "0 0% 5%",
@@ -23,18 +32,17 @@
             "--border": "0 0% 90%",
             "--input": "0 0% 90%",
             "--ring": "340 92% 52%",
-            "--radius": "0.75rem",
-            "--sidebar-background": "0 0% 98%",
+            "--radius": "0.75rem",            "--sidebar-background": "0 0% 98%",
             "--sidebar-foreground": "240 5.3% 26.1%",
-            "--sidebar-primary": "240 5.9% 10%",
+            "--sidebar-primary": "340 92% 52%",
             "--sidebar-primary-foreground": "0 0% 98%",
             "--sidebar-accent": "240 4.8% 95.9%",
             "--sidebar-accent-foreground": "240 5.9% 10%",
             "--sidebar-border": "220 13% 91%",
-            "--sidebar-ring": "217.2 91.2% 59.8%"
+            "--sidebar-ring": "340 92% 52%"
         },
         "dark": {
-            "--font-sans": "'Inter', sans-serif",
+            "--font-sans": "'Vazirmatn', 'IRANSans', 'Inter', sans-serif",
             "--font-mono": "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
             "--background": "0 0% 13%",
             "--foreground": "0 0% 93%",
@@ -54,15 +62,14 @@
             "--destructive-foreground": "210 40% 98%",
             "--border": "0 1% 26%",
             "--input": "0 1% 26%",
-            "--ring": "235, 71%, 57%",
-            "--sidebar-background": "0 0% 9%",
+            "--ring": "235, 71%, 57%",            "--sidebar-background": "0 0% 9%",
             "--sidebar-foreground": "240 4.8% 95.9%",
             "--sidebar-primary": "235, 71%, 57%",
             "--sidebar-primary-foreground": "0 0% 100%",
             "--sidebar-accent": "0 0% 13%",
             "--sidebar-accent-foreground": "235, 71%, 57%",
             "--sidebar-border": "240 3.7% 15.9%",
-            "--sidebar-ring": "217.2 91.2% 59.8%"
+            "--sidebar-ring": "235, 71%, 57%"
         }
     }
 }

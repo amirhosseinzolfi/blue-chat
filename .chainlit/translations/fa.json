@@ -1,0 +1,214 @@
+{
+    "common": {
+        "actions": {
+            "cancel": "لغو",
+            "confirm": "تایید",
+            "continue": "ادامه",
+            "goBack": "بازگشت",
+            "reset": "بازنشانی",
+            "submit": "ارسال"
+        },
+        "status": {
+            "loading": "در حال بارگذاری...",
+            "error": {
+                "default": "یه مشکلی پیش اومد",
+                "serverConnection": "ارتباط با سرور برقرار نشد"
+            }
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "برای دسترسی به برنامه وارد شو",
+            "form": {
+                "email": {
+                    "label": "آدرس ایمیل",
+                    "required": "ایمیل رو باید وارد کنی"
+                },
+                "password": {
+                    "label": "رمز عبور",
+                    "required": "رمز عبور رو باید وارد کنی"
+                },
+                "actions": {
+                    "signin": "ورود"
+                },
+                "alternativeText": {
+                    "or": "یا"
+                }
+            },
+            "errors": {
+                "default": "ورود ناموفق بود",
+                "signin": "با یه حساب دیگه امتحان کن",
+                "oauthSignin": "با یه حساب دیگه امتحان کن",
+                "redirectUriMismatch": "آدرس بازگشت با تنظیمات برنامه همخونی نداره",
+                "oauthCallback": "با یه حساب دیگه امتحان کن",
+                "oauthCreateAccount": "با یه حساب دیگه امتحان کن",
+                "emailCreateAccount": "با یه حساب دیگه امتحان کن",
+                "callback": "با یه حساب دیگه امتحان کن",
+                "oauthAccountNotLinked": "برای تایید هویت، با همون حسابی که قبلا استفاده کردی وارد شو",
+                "emailSignin": "ایمیل ارسال نشد",
+                "emailVerify": "لطفا ایمیلت رو تایید کن، یه ایمیل جدید برات فرستادیم",
+                "credentialsSignin": "ورود ناموفق بود. اطلاعاتی که وارد کردی رو چک کن",
+                "sessionRequired": "برای دسترسی به این صفحه لطفا وارد شو"
+            }
+        },
+        "provider": {
+            "continue": "ادامه با {{provider}}"
+        }
+    },
+    "chat": {
+        "input": {
+            "placeholder": "پیامت رو اینجا بنویس...",
+            "actions": {
+                "send": "ارسال پیام",
+                "stop": "توقف عملیات",
+                "attachFiles": "پیوست فایل‌ها"
+            }
+        },
+        "speech": {
+            "start": "شروع ضبط صدا",
+            "stop": "توقف ضبط صدا",
+            "connecting": "در حال اتصال"
+        },
+        "fileUpload": {
+            "dragDrop": "فایل‌ها رو بکش و اینجا رها کن",
+            "browse": "انتخاب فایل‌ها",
+            "sizeLimit": "محدودیت:",
+            "errors": {
+                "failed": "آپلود ناموفق بود",
+                "cancelled": "آپلود لغو شد"
+            }
+        },
+        "messages": {
+            "status": {
+                "using": "در حال استفاده از",
+                "used": "استفاده شد از"
+            },
+            "actions": {
+                "copy": {
+                    "button": "کپی در کلیپ‌بورد",
+                    "success": "کپی شد!"
+                }
+            },
+            "feedback": {
+                "positive": "مفید بود",
+                "negative": "مفید نبود",
+                "edit": "ویرایش بازخورد",
+                "dialog": {
+                    "title": "نظر خود را اضافه کنید",
+                    "submit": "ارسال بازخورد"
+                },
+                "status": {
+                    "updating": "در حال به‌روزرسانی",
+                    "updated": "بازخورد به‌روز شد"
+                }
+            }
+        },
+        "history": {
+            "title": "آخرین ورودی‌ها",
+            "empty": "اینجا خیلی خالیه...",
+            "show": "نمایش تاریخچه"
+        },
+        "settings": {
+            "title": "پنل تنظیمات"
+        },
+        "watermark": "قدرت گرفته از بلو"
+    },
+    "threadHistory": {
+        "sidebar": {
+            "title": "چت‌های گذشته",
+            "filters": {
+                "search": "جستجو",
+                "placeholder": "جستجوی گفتگوها..."
+            },
+            "timeframes": {
+                "today": "امروز",
+                "yesterday": "دیروز",
+                "previous7days": "۷ روز گذشته",
+                "previous30days": "۳۰ روز گذشته"
+            },
+            "empty": "هیچ گفتگویی پیدا نشد",
+            "actions": {
+                "close": "بستن نوار کناری",
+                "open": "باز کردن نوار کناری"
+            }
+        },
+        "thread": {
+            "untitled": "گفتگوی بدون عنوان",
+            "menu": {
+                "rename": "تغییر نام",
+                "delete": "حذف"
+            },
+            "actions": {
+                "delete": {
+                    "title": "تایید حذف",
+                    "description": "این کار گفتگو، پیام‌ها و عناصر مرتبط با اون رو حذف می‌کنه. این عمل قابل بازگشت نیست.",
+                    "success": "چت حذف شد",
+                    "inProgress": "در حال حذف چت"
+                },
+                "rename": {
+                    "title": "تغییر نام گفتگو",
+                    "description": "یه اسم جدید برای این گفتگو وارد کن",
+                    "form": {
+                        "name": {
+                            "label": "نام",
+                            "placeholder": "اسم جدید رو وارد کن"
+                        }
+                    },
+                    "success": "اسم گفتگو عوض شد!",
+                    "inProgress": "در حال تغییر نام گفتگو"
+                }
+            }
+        }
+    },
+    "navigation": {
+        "header": {
+            "chat": "چت",
+            "readme": "راهنما",
+            "theme": {
+                "light": "تم روشن",
+                "dark": "تم تاریک",
+                "system": "پیروی از سیستم"
+            }
+        },
+        "newChat": {
+            "button": "چت جدید",
+            "dialog": {
+                "title": "ایجاد چت جدید",
+                "description": "این کار تاریخچه چت فعلی شما رو پاک می‌کنه. مطمئنی می‌خوای ادامه بدی؟",
+                "tooltip": "چت جدید"
+            }
+        },
+        "user": {
+            "menu": {
+                "settings": "تنظیمات",
+                "settingsKey": "ت",
+                "apiKeys": "کلیدهای API",
+                "logout": "خروج"
+            }
+        }
+    },
+    "apiKeys": {
+        "title": "کلیدهای API مورد نیاز",
+        "description": "برای استفاده از این برنامه، کلیدهای API زیر لازمه. این کلیدها در حافظه محلی دستگاه شما ذخیره می‌شن.",
+        "success": {
+            "saved": "با موفقیت ذخیره شد"
+        }
+    },
+    "alerts": {
+        "info": "اطلاعات",
+        "note": "یادداشت",
+        "tip": "نکته",
+        "important": "مهم",
+        "warning": "هشدار",
+        "caution": "احتیاط",
+        "debug": "اشکال‌زدایی",
+        "example": "مثال",
+        "success": "موفقیت",
+        "help": "راهنما",
+        "idea": "ایده",
+        "pending": "در انتظار",
+        "security": "امنیت",
+        "beta": "بتا",
+        "best-practice": "بهترین روش"
+    }
+}

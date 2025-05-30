@@ -1,3 +1,5 @@
+# langgraph_agent.py 
+
 import os
 import uuid
 import operator
@@ -10,9 +12,10 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, END, MessagesState
 from langgraph.checkpoint.sqlite import SqliteSaver
 
-# Import logger utilities
+# Import logger utilities with the new functions
 from logger_utils import (
-    log_info, log_debug, log_workflow, log_state, log_messages, log_langgraph
+    log_info, log_debug, log_workflow, log_state, log_messages, log_langgraph,
+    log_conversation, flush_conversation_log
 )
 
 # Agent Configuration
@@ -27,14 +30,14 @@ log_info("LangGraph checkpoint database", data=LANGGRAPH_CHECKPOINT_DB_FILE)
 log_info("Messages threshold for summarization", data=NEW_MESSAGES_THRESHOLD_FOR_SUMMARY)
 log_info("Messages to keep after summarization", data=MESSAGES_TO_KEEP_AFTER_SUMMARY)
 
-# LLM Initialization
+# LLM Initialization (fallback default)
 llm = ChatOpenAI(
-    base_url="http://141.98.210.149:15203/v1",
+    base_url="http://localhost:15401/v1",  # Updated to use g4f API on port 15401
     model_name="gpt-4o",
     temperature=0.5,
     api_key="324" # This should ideally be managed via environment variables
 )
-log_info("LLM initialized for agent", data={"model": "gpt-4o", "base_url": "http://141.98.210.149:15203/v1"})
+log_info("LLM initialized for agent", data={"model": "gpt-4o", "base_url": "http://localhost:15401/v1"})
 
 def ensure_message_has_id(message: BaseMessage) -> BaseMessage:
     if not hasattr(message, "id") or not isinstance(message.id, str):
@@ -49,14 +52,17 @@ class AgentState(MessagesState):
 
 # Agent Nodes
 def call_llm_node(state: AgentState) -> dict:
-    # Minor dependency: cl.user_session.get is used for logging here.
-    # For stricter separation, this could be removed or thread_id passed differently.
     thread_id = cl.user_session.get("thread_id", "unknown_thread_in_agent_node")
     log_workflow("llm_caller", f"Processing for thread {thread_id}")
     log_state(state)
     
+    # 1️⃣ Read the user-selected model from session
+    model_name = cl.user_session.get("llm_model", "gpt-4o")
+    
     msgs = []
     summary = state.get("summary", "")
+    system_instruction = INITIAL_SYSTEM_PROMPT
+    
     if summary:
         log_debug("Using conversation summary in prompt", data={"summary": summary})
         msgs.append(ensure_message_has_id(SystemMessage(
@@ -71,11 +77,77 @@ def call_llm_node(state: AgentState) -> dict:
         log_debug("No messages found, using default greeting")
         msgs.append(ensure_message_has_id(HumanMessage(content="Hello.")))
     
-    log_messages(msgs)
+    # Log messages in a safe way
+    log_debug(f"Processing {len(msgs)} messages")
+    for i, msg in enumerate(msgs):
+        content_preview = ""
+        if isinstance(msg.content, str):
+            content_preview = msg.content[:50] + "..." if len(msg.content) > 50 else msg.content
+        elif isinstance(msg.content, list):
+            # For multimodal content, show content type structure
+            content_preview = f"Multimodal content with {len(msg.content)} parts: " + ", ".join([part.get('type', 'unknown') for part in msg.content])
+        log_debug(f"Message {i+1}: {type(msg).__name__} - {content_preview}")
     
     log_debug("Calling LLM")
-    resp = llm.invoke(msgs)
-    log_debug("LLM response received", data={"content": resp.content})
+    # 2️⃣ Instantiate ChatOpenAI dynamically with the selected model
+    dynamic_llm = ChatOpenAI(
+        base_url="http://localhost:15401/v1",  # Updated to use g4f API on port 15401
+        model_name=model_name,
+        temperature=0.5,
+        api_key=os.environ["OPENAI_API_KEY"]
+    )
+    
+    # Construct a representation of the final prompt for logging
+    final_prompt = f"System: {system_instruction}\n"
+    if summary:
+        final_prompt += f"Summary: {summary}\n"
+    final_prompt += "\nMessages:\n"
+    for msg in msgs:
+        if hasattr(msg, "__class__") and hasattr(msg.__class__, "__name__"):
+            role = msg.__class__.__name__.replace("Message", "")
+            content = msg.content
+            if isinstance(content, list):
+                # Handle multimodal content for display
+                content_parts = []
+                for part in content:
+                    if isinstance(part, dict):
+                        if part.get("type") == "text":
+                            content_parts.append(part.get("text", ""))
+                        elif part.get("type") == "image_url":
+                            content_parts.append("[Image content]")
+                content = "\n".join(content_parts)
+            final_prompt += f"{role}: {content}\n"
+    
+    # Call the LLM
+    resp = dynamic_llm.invoke(msgs)
+    
+    # Log response safely
+    resp_content_preview = ""
+    if isinstance(resp.content, str):
+        resp_content_preview = resp.content[:50] + "..." if len(resp.content) > 50 else resp.content
+    elif isinstance(resp.content, list):
+        resp_content_preview = f"Multimodal response with {len(resp.content)} parts"
+    log_debug("LLM response received", data={"content_preview": resp_content_preview})
+    
+    # Store the conversation log but don't display it yet
+    ai_response = resp.content
+    if isinstance(ai_response, list):
+        # Extract text from multimodal response
+        text_parts = []
+        for part in ai_response:
+            if isinstance(part, dict) and part.get("type") == "text":
+                text_parts.append(part.get("text", ""))
+        ai_response = "\n".join(text_parts)
+    
+    log_conversation(
+        thread_id=thread_id,
+        model_name=model_name,
+        system_instruction=system_instruction,
+        history_summary=summary,
+        messages=msgs,
+        final_prompt=final_prompt,
+        ai_response=ai_response
+    )
     
     return {"messages": [ensure_message_has_id(resp)], "messages_since_last_summary": 1}
 
@@ -109,7 +181,20 @@ def summarize_conversation_node(state: AgentState) -> dict:
     lines = []
     for m in excerpt:
         role = "Human" if isinstance(m, HumanMessage) else "AI" if isinstance(m, AIMessage) else "System"
-        lines.append(f"{role}: {m.content}")
+        
+        # Extract text content properly from potentially multimodal messages
+        content_text = ""
+        if isinstance(m.content, str):
+            content_text = m.content
+        elif isinstance(m.content, list):
+            # Extract text parts from multimodal messages
+            for part in m.content:
+                if isinstance(part, dict) and part.get("type") == "text":
+                    content_text += part.get("text", "")
+            if not content_text:
+                content_text = "[Contains image or non-text content]"
+        
+        lines.append(f"{role}: {content_text}")
     
     prompt = header
     if existing:
@@ -118,7 +203,15 @@ def summarize_conversation_node(state: AgentState) -> dict:
     
     log_debug("Generated summarization prompt", data={"prompt": prompt[:200] + "..." if len(prompt) > 200 else prompt})
     
-    resp = llm.invoke([ensure_message_has_id(HumanMessage(content=prompt))])
+    # Use dynamic LLM for summarization as well
+    model_name = cl.user_session.get("llm_model", "gpt-4o")
+    dynamic_llm = ChatOpenAI(
+        base_url="http://localhost:15401/v1",  # Updated to use g4f API on port 15401
+        model_name=model_name,
+        temperature=0.5,
+        api_key=os.environ["OPENAI_API_KEY"]
+    )
+    resp = dynamic_llm.invoke([ensure_message_has_id(HumanMessage(content=prompt))])
     new_summary = resp.content.strip()
     log_debug("Generated new summary", data={"new_summary": new_summary})
     
@@ -140,16 +233,9 @@ def summarize_conversation_node(state: AgentState) -> dict:
 
 # Graph Compilation
 log_langgraph("Initializing LangGraph checkpoint manager", data={"db_file": LANGGRAPH_CHECKPOINT_DB_FILE})
-# SqliteSaver.from_conn_string() returns a context manager.
-# We need to enter this context to get the actual checkpointer instance.
 _checkpointer_context_manager = SqliteSaver.from_conn_string(LANGGRAPH_CHECKPOINT_DB_FILE)
-
-# Use an ExitStack to manage the checkpointer's lifecycle at the module level.
-# The ExitStack will ensure that the checkpointer's __exit__ method (closing the DB connection)
-# is called when the Python interpreter shuts down or if the stack is explicitly closed.
 _module_exit_stack = contextlib.ExitStack()
 checkpointer_instance = _module_exit_stack.enter_context(_checkpointer_context_manager)
-# Now, checkpointer_instance is an actual SqliteSaver instance, not a context manager.
 
 log_langgraph("Building LangGraph workflow")
 workflow = StateGraph(AgentState)
@@ -164,22 +250,5 @@ workflow.add_conditional_edges(
 workflow.add_edge("summarize_conversation_node", END)
 
 # Compiled LangGraph App
-# Pass the actual checkpointer_instance to workflow.compile()
 app = workflow.compile(checkpointer=checkpointer_instance)
 log_langgraph("LangGraph workflow compiled successfully and ready to be imported.")
-
-# Note: The _module_exit_stack and its managed resources (like the checkpointer_instance's DB connection)
-# will persist for the lifetime of the Python process where this module is loaded.
-# If this module were part of a system with more complex lifecycle management (e.g., dynamic
-# loading/unloading, or specific shutdown sequences), explicit closing of _module_exit_stack
-# via `_module_exit_stack.close()` might be required at an appropriate point (e.g., using `atexit` module).
-# For typical Chainlit/LangGraph server applications, this module-level setup is generally acceptable.
-
-# Example of how to manage checkpointer context if needed separately (not used for app compilation directly here):
-# memory_cm = SqliteSaver.from_conn_string(":memory:")
-# graph = StateGraph(AgentState)
-# ... define graph ...
-# runnable = graph.compile(checkpointer=memory)
-# With contextlib.ExitStack() as stack:
-#   stack.enter_context(memory) # Manages the __enter__ and __exit__
-#   # use runnable

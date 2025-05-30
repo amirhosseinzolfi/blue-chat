@@ -8,7 +8,7 @@ user_env = []
 
 # Duration (in seconds) during which the session is saved when the connection is lost
 session_timeout = 3600
-
+default_language = "fa"
 # Duration (in seconds) of the user session expiry
 user_session_timeout = 1296000  # 15 days
 
@@ -68,7 +68,7 @@ edit_message = true
 # Name of the assistant.
 name = "blue"
 
-# default_theme = "dark"
+default_theme = "dark"
 
 # layout = "wide"
 
@@ -82,14 +82,14 @@ cot = "full"
 
 # Specify a CSS file that can be used to customize the user interface.
 # The CSS file can be served from the public directory or via an external link.
-# custom_css = "/public/test.css"
+custom_css = "/public/custom_rtl.css"
 
 # Specify additional attributes for a custom CSS file
 # custom_css_attributes = "media=\"print\""
 
 # Specify a JavaScript file that can be used to customize the user interface.
 # The JavaScript file can be served from the public directory.
-# custom_js = "/public/custom.js"
+custom_js = "/public/custom.js,/public/custom_loader.js"
 
 # Specify additional attributes for custom JS file
 # custom_js_attributes = "async type = \"module\""
@@ -120,3 +120,6 @@ default_avatar_file_url = "/public/Firefly_20241115133720_1747640357445_no_bg.pn
 
 [meta]
 generated_by = "2.5.5"
+
+host = "141.98.210.149"
+port = 15308
