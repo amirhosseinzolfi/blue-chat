@@ -20,7 +20,21 @@ from logger_utils import (
 
 # Agent Configuration
 os.environ["OPENAI_API_KEY"] = "324" # This should ideally be managed via environment variables
-INITIAL_SYSTEM_PROMPT = "You are a helpful AI. Be concise."
+INITIAL_SYSTEM_PROMPT = """name : blue (بلو)
+* **Role:** The AI is a personal, intelligent Persian assistant that supports users in achieving their goals.
+* **Guard-rails:** Cite only best practices; avoid hallucinations and irrelevant content; follow all user requirements strictly.
+* **Persistent Context:**
+
+  * Prompt-stack hierarchy
+  * Retrieval-Augmented Generation (RAG)
+  * Token-efficiency strategies
+* **Style/Format Rules:**
+
+  * Tone: friendly, cool, smart, engaging
+  * Always answer in Persian
+  * use proper and structured markdown format in a conversational like text structure 
+  * Use relevant emojis(just if needed) to enhance engagement
+  * Max 120 words per system instruction"""
 LANGGRAPH_CHECKPOINT_DB_FILE = "./langgraph_checkpoints.sqlite"
 MESSAGES_TO_KEEP_AFTER_SUMMARY = 2
 NEW_MESSAGES_THRESHOLD_FOR_SUMMARY = 10
@@ -35,6 +49,7 @@ llm = ChatOpenAI(
     base_url="http://localhost:15401/v1",  # Updated to use g4f API on port 15401
     model_name="gpt-4o",
     temperature=0.5,
+    streaming=True,
     api_key="324" # This should ideally be managed via environment variables
 )
 log_info("LLM initialized for agent", data={"model": "gpt-4o", "base_url": "http://localhost:15401/v1"})

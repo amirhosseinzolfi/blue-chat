@@ -1,66 +1,84 @@
-/* Import Vazirmatn font with additional weights for better typography */
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('./fonts/Vazirmatn-Regular.woff2') format('woff2'); /* Adjust path if needed */
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('./fonts/Vazirmatn-Bold.woff2') format('woff2'); /* Adjust path if needed */
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('./fonts/Vazirmatn-Light.woff2') format('woff2'); /* Adjust path if needed */
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('./fonts/Vazirmatn-Medium.woff2') format('woff2'); /* Adjust path if needed */
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Apply Persian font globally via Chainlit's theme mechanism (theme.json) */
-/* This CSS file will primarily handle RTL text direction and specific overrides */
-
-/* Set the base font for the app - this is usually handled by theme.json but can be a fallback */
-body,
-#root,
-html {
-  font-family: 'Vazirmatn', Inter, sans-serif !important;
-}
-
+/* Remove existing font-face declarations since they're now in dedicated files */
+/* Start our CSS with better font optimization */
 :root {
-  --font-sans: 'Vazirmatn', Inter, sans-serif; /* Reinforce for components that might not inherit */
-}
-
-/* Global typography improvements for Persian text */
-:root {
-  --persian-heading-line-height: 1.7;
-  --persian-text-line-height: 1.8;
+  --primary-persian-font: 'Vazirmatn', 'IRANSans', sans-serif;
+  --secondary-persian-font: 'IRANSans', 'Vazirmatn', sans-serif;
+  --persian-heading-line-height: 1.6;
+  --persian-text-line-height: 1.7;
   --persian-letter-spacing: -0.01em;
   --persian-word-spacing: 0.05em;
 }
 
-/* Enhanced global typography for Persian text */
-body {
+/* Apply Persian font globally */
+body,
+#root,
+html {
+  font-family: var(--primary-persian-font) !important;
+}
+
+/* Enhanced typography optimization for Persian text */
+.message-content, 
+.input-box textarea,
+input::placeholder,
+textarea::placeholder,
+.header-title, 
+[data-testid="thread-history-sidebar"] .line-clamp-2,
+.settings-modal-text,
+.cl-dialog-title,
+.cl-button-label,
+.cl-input-label,
+.cl-select-label,
+.cl-markdown-p,
+.cl-markdown-li {
+  font-family: var(--primary-persian-font) !important;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Ensure ALL text input fields use our optimized Persian font */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"],
+textarea,
+[data-testid="chat-input"] textarea,
+[data-testid="chat-input"] input,
+[contenteditable="true"],
+.cl-input input,
+.MuiTextField-root input,
+.MuiTextField-root textarea,
+div[role="textbox"],
+[data-cmdk-input] {
+  font-family: var(--primary-persian-font) !important;
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: bidi-override !important;
+}
+
+/* Message content with optimized font settings */
+.message:has(div[data-testid="user-avatar"]) div[data-testid="message-content"] > div > div,
+.message:has(div[data-testid="bot-avatar"]) div[data-testid="message-content"] > div > div {
+  font-family: var(--primary-persian-font) !important;
+  font-size: 0.95rem !important;
+  line-height: 1.4 !important; /* Reduced from 1.6 for more compact spacing */
+  letter-spacing: var(--persian-letter-spacing) !important;
+  word-spacing: var(--persian-word-spacing) !important;
+  font-weight: 400 !important;
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
 }
 
-/* Improve heading readability in Persian */
+/* Compact and bolder chat text */
+.message:has(div[data-testid="user-avatar"]) div[data-testid="message-content"] > div > div,
+.message:has(div[data-testid="bot-avatar"]) div[data-testid="message-content"] > div > div,
+.message div[data-testid="message-content"] > div > div {
+  /* tighter lines and heavier weight */
+  line-height: 1.2 !important;
+  font-weight: 500 !important;
+}
+
+/* Heading optimization with Vazirmatn */
 h1, h2, h3, h4, h5, h6,
 .markdown-body h1,
 .markdown-body h2,
@@ -68,22 +86,29 @@ h1, h2, h3, h4, h5, h6,
 .markdown-body h4,
 .markdown-body h5,
 .markdown-body h6 {
-  font-family: 'Vazirmatn', sans-serif !important;
+  font-family: var(--primary-persian-font) !important;
   font-weight: 600 !important;
   line-height: var(--persian-heading-line-height) !important;
   letter-spacing: var(--persian-letter-spacing) !important;
   word-spacing: var(--persian-word-spacing) !important;
   direction: rtl !important;
   text-align: right !important;
-  margin-bottom: 0.8em !important;
-  margin-top: 1.2em !important;
+  margin-bottom: 0.6em !important;
+  margin-top: 1em !important;
 }
 
-/* Adjust paragraph spacing for Persian readability */
-p, 
-.markdown-body p {
-  margin-bottom: 1em !important;
-  line-height: var(--persian-text-line-height) !important;
+/* Ensure code blocks use monospace font but Persian text is handled properly */
+code, pre, kbd, samp {
+  font-family: var(--font-mono), monospace !important;
+  /* Persian comments within code will still use Persian font */
+}
+
+/* Style the thread history search box with our optimized Persian font */
+[data-testid="thread-history-sidebar"] [data-cmdk-input] {
+  font-family: var(--primary-persian-font) !important;
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: bidi-override !important;
 }
 
 /* Hide the "Powered by Chainlit" footer */
@@ -114,23 +139,45 @@ textarea::placeholder, /* Textarea placeholders */
   font-family: 'Vazirmatn', Inter, sans-serif !important;
 }
 
-/* Ensure text input fields are also RTL for typing */
+/* Ensure ALL text input fields are RTL for typing - comprehensive coverage */
 input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"],
 textarea,
-[data-testid="chat-input"] textarea {
+[data-testid="chat-input"] textarea,
+[data-testid="chat-input"] input,
+[contenteditable="true"],
+.cl-input input,
+.MuiTextField-root input,
+.MuiTextField-root textarea,
+div[role="textbox"],
+[data-cmdk-input] {
   direction: rtl !important;
   text-align: right !important;
   font-family: 'Vazirmatn', 'IRANSans', sans-serif !important;
+  unicode-bidi: bidi-override !important;
 }
 
-/* Ensure all placeholders have RTL styling */
+/* Ensure ALL placeholders have RTL styling - comprehensive coverage */
 input::placeholder,
+input[type="text"]::placeholder,
+input[type="search"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
 textarea::placeholder,
-[data-testid="chat-input"] textarea::placeholder {
+[data-testid="chat-input"] textarea::placeholder,
+[data-testid="chat-input"] input::placeholder,
+.cl-input input::placeholder,
+.MuiTextField-root input::placeholder,
+.MuiTextField-root textarea::placeholder,
+div[role="textbox"]::placeholder,
+[data-cmdk-input]::placeholder {
   direction: rtl !important;
   text-align: right !important;
   font-family: 'Vazirmatn', 'IRANSans', sans-serif !important;
   opacity: 0.7 !important;
+  unicode-bidi: bidi-override !important;
 }
 
 /* Markdown content: apply RTL to text blocks, but keep code LTR */
@@ -275,117 +322,240 @@ div[role="tooltip"] { /* Generic tooltip role */
     text-align: right;
 }
 
-/* Apply Vazirmatn and IRANSans to the main body for broader coverage, respecting theme.json for specific components */
-body {
-    font-family: 'Vazirmatn', 'IRANSans', 'Inter', sans-serif !important;
-}
-
-/* Target the content of user messages with improved typography */
-.message:has(div[data-testid="user-avatar"]) div[data-testid="message-content"] > div > div, /* Covers user messages */
-.message:has(div[data-testid="bot-avatar"]) div[data-testid="message-content"] > div > div /* Covers assistant messages */
-{
-    font-family: 'Vazirmatn', 'IRANSans', 'Inter', sans-serif !important;
-    font-size: 1.05rem !important; /* Slightly increased font size */
-    line-height: 1.8 !important; /* Improved line spacing for Persian text */
-    letter-spacing: -0.01em !important; /* Slight negative letter spacing for Persian */
-    word-spacing: 0.05em !important; /* Better word spacing for Persian */
-    font-weight: 400 !important; /* Regular weight for better legibility */
-    text-rendering: optimizeLegibility !important; /* Enhance text rendering */
-    -webkit-font-smoothing: antialiased !important; /* Better font smoothing on WebKit */
-    -moz-osx-font-smoothing: grayscale !important; /* Better font smoothing on Firefox */
-}
-
-/* Ensure code blocks also use a readable mono font, but Persian comments/strings should inherit if possible */
-code, pre, kbd, samp {
-    font-family: 'Vazirmatn', 'IRANSans', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace !important;
-    font-size: 0.95rem !important; /* Adjust if needed for mono font */
-}
-
-/* Styling for the message author names if needed */
-.message > div > div > div.items-center.flex > div.text-sm.font-medium.text-foreground {
-    font-family: 'Vazirmatn', 'IRANSans', 'Inter', sans-serif !important;
-    font-size: 0.9rem !important;
-}
-
-/* General message container text, if the above specific selectors are not enough */
-.message-content {
-    font-family: 'Vazirmatn', 'IRANSans', 'Inter', sans-serif !important;
-    font-size: 1.05rem !important;
-    line-height: 1.7 !important;
-}
-
 /* 1) Enlarge Chainlit default spinner */
 .message-run svg {
   width: 1.5rem !important;
   height: 1.5rem !important;
 }
 
-/* 2) Increase chat text font size */
+/* 2) Decrease chat text font size to be more standard and minimal */
 .message div[data-testid="message-content"] > div > div {
-  font-size: 1.12rem !important;
+  font-size: 0.95rem !important; /* Reduced from 1.12rem to be more standard */
+  line-height: 1.4 !important; /* Slightly reduced line height for compactness */
 }
 
-/* 3) Reposition bot avatar to the right for better RTL experience */
-.message:has(div[data-testid="bot-avatar"]) {
-  direction: rtl;
-  display: flex;
+/* Reduce line height in chat messages for more compact display */
+/* Target the content of user messages with improved typography */
+.message:has(div[data-testid="user-avatar"]) div[data-testid="message-content"] > div > div, /* Covers user messages */
+.message:has(div[data-testid="bot-avatar"]) div[data-testid="message-content"] > div > div /* Covers assistant messages */
+{
+    font-family: 'Vazirmatn', 'IRANSans', 'Inter', sans-serif !important;
+    font-size: 0.95rem !important; 
+    line-height: 1.4 !important; /* Reduced from 1.6 for more compact spacing */
+    letter-spacing: -0.01em !important;
+    word-spacing: 0.05em !important;
+    font-weight: 400 !important;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
-.message:has(div[data-testid="bot-avatar"]) [data-testid="bot-avatar"] {
-  order: 1;
-  margin-left: 0;
-  margin-right: 0.5rem;
+/* General message container text, if the above specific selectors are not enough */
+.message-content {
+    font-family: 'Vazirmatn', 'IRANSans', 'Inter', sans-serif !important;
+    font-size: 0.95rem !important;
+    line-height: 1.4 !important; /* Reduced from 1.6 for more compact spacing */
+}
+
+/* Also update the generic selector for message content */
+.message div[data-testid="message-content"] > div > div {
+  font-size: 0.95rem !important;
+  line-height: 1.4 !important; /* Reduced from 1.6 for more compact spacing */
+}
+
+/* Ensuring paragraph spacing within markdown is also tight */
+.markdown-body p {
+  margin-top: 0.3em !important;
+  margin-bottom: 0.3em !important;
+  line-height: 1.4 !important; /* Ensure consistent line height in markdown paragraphs */
+}
+
+/* Make list items more compact */
+.markdown-body ul li,
+.markdown-body ol li {
+  line-height: 1.4 !important; /* Match the more compact line height */
+  margin-bottom: 0.2em !important; /* Reduce space between list items */
+}
+
+/* Modern circular loading animation */
+@keyframes modernSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.modern-loading-spinner {
+  width: 20px !important;
+  height: 20px !important;
+  border: 2px solid rgba(var(--primary), 0.2) !important;
+  border-top: 2px solid hsl(var(--primary)) !important;
   border-radius: 50% !important;
-  /* Add subtle shadow to avatar */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
-  transition: transform 0.2s ease-in-out !important;
+  animation: modernSpin 1s linear infinite !important;
+  display: inline-block !important;
+  margin-left: 8px !important;
 }
 
-.message:has(div[data-testid="bot-avatar"]) [data-testid="bot-avatar"]:hover {
-  transform: scale(1.05) !important;
-}
-
-/* 4) Align bot action buttons under message content */
-.message:has(div[data-testid="bot-avatar"]) div[data-testid="message-actions"] {
-  justify-content: flex-start !important;
-}
-
-/* Enhanced message bubbles for better visual hierarchy */
-.message div[data-testid="message-content"] {
-  position: relative;
-  padding: 1rem 1.25rem !important;
-  border-radius: 14px !important;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-}
-
-/* Style bot messages with unique background */
-.message:has(div[data-testid="bot-avatar"]) div[data-testid="message-content"] {
-  background-color: rgba(var(--background), 0.8) !important;
+.modern-loading-container {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  border-radius: 12px !important;
+  background-color: rgba(var(--muted), 0.3) !important;
   border: 1px solid rgba(var(--primary), 0.1) !important;
+  font-family: 'Vazirmatn', sans-serif !important;
+  font-size: 0.9rem !important;
+  color: rgba(var(--foreground), 0.8) !important;
+  direction: rtl !important;
+  text-align: right !important;
 }
 
-/* Style user messages with different background */
-.message:has(div[data-testid="user-avatar"]) div[data-testid="message-content"] {
-  background-color: rgba(var(--primary), 0.08) !important;
+/* Hide the default Chainlit spinner when we show our custom one */
+.message-run.modern-loading-active svg {
+  display: none !important;
+}
+
+/* Enhanced chat input styling with reduced font size */
+[data-testid="chat-input"] textarea {
+  border-radius: 14px !important;
+  transition: all 0.25s ease !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  direction: rtl !important;
+  text-align: right !important;
+  font-family: 'Vazirmatn', sans-serif !important;
+  font-size: 0.95rem !important; /* Reduced from 1rem for consistency */
+  line-height: 1.7 !important;
+  padding: 12px 16px !important;
+  min-height: 60px !important;
   border: 1px solid rgba(var(--primary), 0.15) !important;
+  unicode-bidi: bidi-override !important;
+  writing-mode: horizontal-tb !important;
 }
 
-/* Hover effect for messages */
-.message div[data-testid="message-content"]:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+[data-testid="chat-input"] textarea:focus {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-2px) !important;
+  border-color: rgba(var(--primary), 0.3) !important;
+  outline: none !important;
+}
+
+/* Make sure the chat input placeholder text is optimized for Persian with proper RTL */
+[data-testid="chat-input"] textarea::placeholder {
+  opacity: 0.65 !important;
+  font-size: 0.9rem !important; /* Reduced from 0.98rem */
+  font-weight: 300 !important;
+  color: rgba(var(--foreground), 0.7) !important;
+  font-family: 'Vazirmatn', sans-serif !important;
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: bidi-override !important;
+}
+
+/* Force RTL for chat input container */
+[data-testid="chat-input"] {
+  direction: rtl !important;
+}
+
+/* Comprehensive input field styling for all Chainlit components */
+.cl-input-field,
+.cl-textarea-field,
+.cl-select-field {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.cl-input-field input,
+.cl-textarea-field textarea,
+.cl-select-field select {
+  direction: rtl !important;
+  text-align: right !important;
+  font-family: 'Vazirmatn', sans-serif !important;
+  unicode-bidi: bidi-override !important;
+}
+
+.cl-input-field input::placeholder,
+.cl-textarea-field textarea::placeholder {
+  direction: rtl !important;
+  text-align: right !important;
+  font-family: 'Vazirmatn', sans-serif !important;
+  unicode-bidi: bidi-override !important;
+}
+
+/* Style the thread history search box with improved RTL support */
+[data-testid="thread-history-sidebar"] [data-cmdk-input-wrapper] {
+  direction: rtl !important;
+  padding: 0 8px !important;
+}
+
+[data-testid="thread-history-sidebar"] [data-cmdk-input] {
+  background-color: rgba(var(--sidebar-accent), 0.5) !important;
+  border-radius: 10px !important;
+  direction: rtl !important;
+  text-align: right !important;
+  padding: 10px 12px !important;
+  margin: 10px 8px !important;
+  font-size: 0.95rem !important;
+  font-family: 'Vazirmatn', sans-serif !important;
+  transition: all 0.25s ease !important;
+  border: 1px solid rgba(var(--sidebar-primary), 0.15) !important;
+  color: rgba(var(--sidebar-foreground), 0.9) !important;
+  unicode-bidi: bidi-override !important;
+}
+
+[data-testid="thread-history-sidebar"] [data-cmdk-input]:focus {
+  background-color: rgba(var(--sidebar-accent), 0.7) !important;
+  border-color: rgba(var(--sidebar-primary), 0.3) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
   transform: translateY(-1px) !important;
 }
 
-/* Style the message author names with proper RTL and enhanced typography */
-.message > div > div > div.items-center.flex > div.text-sm.font-medium.text-foreground {
-    font-family: 'Vazirmatn', sans-serif !important;
-    font-size: 0.9rem !important;
-    font-weight: 500 !important;
-    direction: rtl !important;
-    margin-bottom: 0.4rem !important;
-    opacity: 0.85 !important;
-    letter-spacing: -0.01em !important;
+/* Ensure search input placeholder is also RTL */
+[data-testid="thread-history-sidebar"] [data-cmdk-input]::placeholder {
+  direction: rtl !important;
+  text-align: right !important;
+  font-family: 'Vazirmatn', sans-serif !important;
+  unicode-bidi: bidi-override !important;
+}
+
+/* Add refined animation to new messages */
+.message:has(div[data-testid="bot-avatar"]) {
+  animation: fadeIn 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transform-origin: right center; /* For RTL messages */
+}
+
+.message:has(div[data-testid="user-avatar"]) {
+  animation: fadeInUser 0.35s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transform-origin: left center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.65;
+    transform: translateY(8px) translateX(2px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1);
+  }
+}
+
+@keyframes fadeInUser {
+  from {
+    opacity: 0.75;
+    transform: translateY(5px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Hide action buttons (copy, like, dislike, custom actions, debug) below messages */
+.step[data-step-type] div.\-ml-1\.5.flex.items-center.flex-wrap {
+  display: none !important;
 }
 
 /* Custom scrollbar for chat history sidebar */
@@ -468,7 +638,7 @@ html {
 
 /* Style the chat history date/time groupings */
 [data-testid="thread-history-sidebar"] [role="heading"] {
-  font-size: 0.85rem !important;
+  font-size: 0.8rem !important; /* Reduced from 0.85rem */
   font-weight: 600 !important;
   opacity: 0.8 !important;
   letter-spacing: 0.5px !important;
@@ -480,6 +650,7 @@ html {
 [data-testid="thread-history-sidebar"] [role="option"] .line-clamp-2 {
   font-weight: 500 !important;
   letter-spacing: 0.2px !important;
+  font-size: 0.9rem !important; /* Reduced from 0.95rem */
 }
 
 /* Enhanced chat history items for better Persian display */
@@ -533,7 +704,7 @@ textarea[placeholder="پیامت رو اینجا بنویس..."] {
   font-family: 'Vazirmatn', 'IRANSans', sans-serif !important;
 }
 
-/* Enhanced chat input styling for better Persian text entry */
+/* Enhanced chat input styling for better Persian text entry with comprehensive RTL support */
 [data-testid="chat-input"] textarea {
   border-radius: 14px !important;
   transition: all 0.25s ease !important;
@@ -541,11 +712,13 @@ textarea[placeholder="پیامت رو اینجا بنویس..."] {
   direction: rtl !important;
   text-align: right !important;
   font-family: 'Vazirmatn', sans-serif !important;
-  font-size: 1rem !important;
+  font-size: 0.95rem !important; /* Reduced from 1rem for consistency */
   line-height: 1.7 !important;
   padding: 12px 16px !important;
   min-height: 60px !important;
   border: 1px solid rgba(var(--primary), 0.15) !important;
+  unicode-bidi: bidi-override !important;
+  writing-mode: horizontal-tb !important;
 }
 
 [data-testid="chat-input"] textarea:focus {
@@ -555,13 +728,46 @@ textarea[placeholder="پیامت رو اینجا بنویس..."] {
   outline: none !important;
 }
 
-/* Ensure the chat input placeholder text is optimized for Persian */
+/* Make sure the chat input placeholder text is optimized for Persian with proper RTL */
 [data-testid="chat-input"] textarea::placeholder {
   opacity: 0.65 !important;
-  font-size: 0.98rem !important;
+  font-size: 0.9rem !important; /* Reduced from 0.98rem */
   font-weight: 300 !important;
   color: rgba(var(--foreground), 0.7) !important;
   font-family: 'Vazirmatn', sans-serif !important;
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: bidi-override !important;
+}
+
+/* Force RTL for chat input container */
+[data-testid="chat-input"] {
+  direction: rtl !important;
+}
+
+/* Comprehensive input field styling for all Chainlit components */
+.cl-input-field,
+.cl-textarea-field,
+.cl-select-field {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.cl-input-field input,
+.cl-textarea-field textarea,
+.cl-select-field select {
+  direction: rtl !important;
+  text-align: right !important;
+  font-family: 'Vazirmatn', sans-serif !important;
+  unicode-bidi: bidi-override !important;
+}
+
+.cl-input-field input::placeholder,
+.cl-textarea-field textarea::placeholder {
+  direction: rtl !important;
+  text-align: right !important;
+  font-family: 'Vazirmatn', sans-serif !important;
+  unicode-bidi: bidi-override !important;
 }
 
 /* Style the thread history search box with improved RTL support */
@@ -582,6 +788,7 @@ textarea[placeholder="پیامت رو اینجا بنویس..."] {
   transition: all 0.25s ease !important;
   border: 1px solid rgba(var(--sidebar-primary), 0.15) !important;
   color: rgba(var(--sidebar-foreground), 0.9) !important;
+  unicode-bidi: bidi-override !important;
 }
 
 [data-testid="thread-history-sidebar"] [data-cmdk-input]:focus {
@@ -589,6 +796,14 @@ textarea[placeholder="پیامت رو اینجا بنویس..."] {
   border-color: rgba(var(--sidebar-primary), 0.3) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
   transform: translateY(-1px) !important;
+}
+
+/* Ensure search input placeholder is also RTL */
+[data-testid="thread-history-sidebar"] [data-cmdk-input]::placeholder {
+  direction: rtl !important;
+  text-align: right !important;
+  font-family: 'Vazirmatn', sans-serif !important;
+  unicode-bidi: bidi-override !important;
 }
 
 /* Add refined animation to new messages */
@@ -622,5 +837,10 @@ textarea[placeholder="پیامت رو اینجا بنویس..."] {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+/* Hide action buttons (copy, like, dislike, custom actions, debug) below messages */
+.step[data-step-type] div.\-ml-1\.5.flex.items-center.flex-wrap {
+  display: none !important;
 }
 

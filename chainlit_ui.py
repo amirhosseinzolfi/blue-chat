@@ -46,17 +46,20 @@ from langgraph_agent import app, INITIAL_SYSTEM_PROMPT, ensure_message_has_id
 # Organized by provider for better categorization
 LLM_MODELS = [
     # OpenAI models
+    "gemini-1.5-flash",
+
+    "gemini-1.5-pro",
     "gpt-4o",
     "gpt-4o-mini",
     "gpt-4.1",
     "gpt-4.1-mini",
+    "gpt-4.5",
     # Google models
-    "gemini-1.5-flash",
-    "gemini-1.5-pro",
     "gemini-2.0-flash",
     "gemini-2.0-pro",
     "gemini-2.5-flash",
     "gemini-2.5-pro",
+    "evil",
     # Anthropic models
     "claude-3.5-sonnet",
     "claude-3.7-sonnet",
@@ -64,11 +67,14 @@ LLM_MODELS = [
     "llama-3.3-70b",
     # DeepSeek models
     "deepseek-r1",
+    "deepseek-r1-turbo",
     # xAI models
     "grok-3-r1",
     # Other models
     "o1",
-    "o3-mini",
+    "o3-mini-high",
+    "o4-mini-high",
+    "llama-4-maverick-17b",
 ]
 
 def get_chat_settings_widgets(current_model: Optional[str] = None):
@@ -354,7 +360,7 @@ async def handle_message(message: cl.Message):
               data={"id": user_msg.id, "content_structure": [part["type"] for part in human_message_content]})
 
     # Create a loading message - we'll replace it with the complete response later
-    spinner = cl.Message(content="", author="") # Use empty content for a standard spinner
+    spinner = cl.Message(content="", author="بلو") # Empty content for modern spinner
     await spinner.send()
 
     bot_response_content = ""

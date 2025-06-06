@@ -2,16 +2,16 @@
     "custom_fonts": [
         {
             "family": "IRANSans",
-            "url": "https://cdn.jsdelivr.net/gh/rastikerdar/iran-sans/dist/iran-sans.css"
+            "url": "/public/fonts/iransans/iransans.css"
         },
         {
             "family": "Vazirmatn",
-            "url": "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"
+            "url": "/public/fonts/vazirmatn/vazirmatn.css"
         }
     ],
     "variables": {
         "light": {
-            "--font-sans": "'Vazirmatn', 'IRANSans', 'Inter', sans-serif",
+            "--font-sans": "'Vazir', 'IRANSans', 'Inter', sans-serif",
             "--font-mono": "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace",
             "--background": "0 0% 100%",
             "--foreground": "0 0% 5%",

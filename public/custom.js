@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(updateWatermark, 500);
   setInterval(updateWatermark, 3000);
 
-  // Function to enhance the loading animation experience
+  // Function to enhance the loading animation experience with modern circular spinner
   function enhanceLoadingAnimations() {
     // Find any active loading messages
     const loadingMessages = document.querySelectorAll('.message-run');
@@ -78,32 +78,43 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!loader.hasAttribute('data-enhanced')) {
         // Mark as enhanced to avoid duplicating
         loader.setAttribute('data-enhanced', 'true');
+        loader.classList.add('modern-loading-active');
         
-        // Get theme-based colors - use primary color from current theme
-        const isDarkTheme = document.documentElement.classList.contains('dark');
-        const primaryColor = isDarkTheme ? 
-          'hsla(235, 71%, 57%, 0.8)' : 
-          'hsla(340, 92%, 52%, 0.8)';
+        // Clear any existing content in the loader
+        loader.innerHTML = '';
         
-        // Add custom text content that matches your RTL requirements
-        const loadingTextSpan = document.createElement('span');
-        loadingTextSpan.className = 'loading-text';
-        loadingTextSpan.style.position = 'absolute';
-        loadingTextSpan.style.right = '55px';
-        loadingTextSpan.style.top = '14px';
-        loadingTextSpan.style.fontFamily = "'Vazirmatn', 'IRANSans', sans-serif";
-        loadingTextSpan.style.fontSize = '14px';
-        loadingTextSpan.style.fontWeight = '500';
-        loadingTextSpan.style.color = primaryColor;
-        loadingTextSpan.style.zIndex = '3';
-        loadingTextSpan.style.direction = 'rtl';
-        loadingTextSpan.style.opacity = '0';
-        loadingTextSpan.style.animation = 'fadeInRight 0.5s forwards';
-        loadingTextSpan.style.animationDelay = '0.2s';
-        loadingTextSpan.textContent = 'در حال پاسخ دادن';
+        // Create modern loading container
+        const loadingContainer = document.createElement('div');
+        loadingContainer.className = 'modern-loading-container';
         
-        // Append the text to the loader
-        loader.appendChild(loadingTextSpan);
+        // Add loading text
+        const loadingText = document.createElement('span');
+        loadingText.textContent = 'در حال پاسخ';
+        loadingText.style.fontFamily = "'Vazirmatn', 'IRANSans', sans-serif";
+        loadingText.style.fontSize = '0.9rem';
+        loadingText.style.fontWeight = '400';
+        
+        // Add modern circular spinner
+        const spinner = document.createElement('div');
+        spinner.className = 'modern-loading-spinner';
+        
+        // Append elements to container
+        loadingContainer.appendChild(loadingText);
+        loadingContainer.appendChild(spinner);
+        
+        // Append container to loader
+        loader.appendChild(loadingContainer);
+        
+        // Add fade-in animation
+        loadingContainer.style.opacity = '0';
+        loadingContainer.style.transform = 'translateY(5px)';
+        loadingContainer.style.transition = 'all 0.3s ease';
+        
+        // Trigger animation after a brief delay
+        setTimeout(() => {
+          loadingContainer.style.opacity = '1';
+          loadingContainer.style.transform = 'translateY(0)';
+        }, 50);
       }
     });
   }
